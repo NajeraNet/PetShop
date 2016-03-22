@@ -15,7 +15,7 @@ if (cmd === 'read') {
     }
 
     let pets = JSON.parse(data);
-    let petNum = process.argv[3];
+    
 
     if (pets[petNum]) {
       console.log(pets[petNum]);

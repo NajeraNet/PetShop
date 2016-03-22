@@ -21,7 +21,12 @@ var routes = {
  '/pets/0': function(req, res) {
    res.setHeader("Content-Type", "application/json");
    res.statusCode = 200;
-   res.end(JSON.stringify(pets[0]))
+   res.end(JSON.stringify(pets[0]));
+ },
+ '/pets/1': function(req, res) {
+   res.setHeader("Content-Type", "application/json");
+   res.statusCode = 200;
+   res.end(JSON.stringify(pets[1]));
  }
 }
 

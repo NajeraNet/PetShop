@@ -1,12 +1,12 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var petsPath = path.join(__dirname, 'pets.json');
+let fs = require('fs');
+let path = require('path');
+let petsPath = path.join(__dirname, 'pets.json');
 
-var node = path.basename(process.argv[0]);
-var file = path.basename(process.argv[1]);
-var cmd = process.argv[2];
+let node = path.basename(process.argv[0]);
+let file = path.basename(process.argv[1]);
+let cmd = process.argv[2];
 
 if (cmd === 'read') {
   fs.readFile(petsPath, 'utf8', function(err, data) {
@@ -14,8 +14,8 @@ if (cmd === 'read') {
       throw err;
     }
 
-    var pets = JSON.parse(data);
-    var petNum = process.argv[3];
+    let pets = JSON.parse(data);
+    let petNum = process.argv[3];
 
     if (pets[petNum]) {
       console.log(pets[petNum]);
@@ -36,12 +36,12 @@ else if (cmd === 'create') {
     if (readErr) {
       throw readErr;
     }
-    var pets = JSON.parse(data);
-    var petage = parseInt(process.argv[3]);
-    var petkind = process.argv[4];
-    var petname = process.argv[5];
+    let pets = JSON.parse(data);
+    let petage = parseInt(process.argv[3]);
+    let petkind = process.argv[4];
+    let petname = process.argv[5];
 
-    var petobj = {
+    let petobj = {
       age: petage,
       kind: petkind,
       name: petname
@@ -53,7 +53,7 @@ else if (cmd === 'create') {
     }
 
     pets.push(petobj);
-    var petsJSON = JSON.stringify(pets);
+    let petsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPath, petsJSON, function(writeErr) {
       if (writeErr) {
@@ -67,12 +67,12 @@ else if (cmd === 'create') {
     if (upErr) {
       throw upErr;
     }
-    var pets = JSON.parse(data);
-    var petNum = process.argv[3];
-    var pet = pets[petNum];
-    var petage = parseInt(process.argv[4]);
-    var petkind = process.argv[5];
-    var petname = process.argv[6];
+    let pets = JSON.parse(data);
+    let petNum = process.argv[3];
+    let pet = pets[petNum];
+    let petage = parseInt(process.argv[4]);
+    let petkind = process.argv[5];
+    let petname = process.argv[6];
     if (!pet || !petage || !petkind || !petname) {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
       process.exit(1);
@@ -82,7 +82,7 @@ else if (cmd === 'create') {
     pet.kind = petkind;
     pet.name = petname;
     console.log(pet);
-    var petsJSON = JSON.stringify(pets);
+    let petsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPath, petsJSON, function(updateErr) {
       if (updateErr) {
@@ -97,16 +97,16 @@ else if (cmd === 'destroy') {
     if (destroyErr) {
       throw destroyErr;
     }
-    var pets = JSON.parse(data);
-    var petNum = process.argv[3];
-    var pet = pets[petNum];
+    let pets = JSON.parse(data);
+    let petNum = process.argv[3];
+    let pet = pets[petNum];
 
     if (!pet) {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
     }
     console.log(pets.splice(pet, 1))
-    var petsJSON = JSON.stringify(pets);
+    let petsJSON = JSON.stringify(pets);
     fs.writeFile(petsPath, petsJSON, function(destErr) {
       if (destErr) {
         throw destErr;

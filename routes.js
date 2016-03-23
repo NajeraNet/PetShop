@@ -17,25 +17,28 @@ var routes = {
     res.end(JSON.stringify(pets));
   },
   pethandler: function(req, res, index) {
-      if (index <= JSON.stringify(pets).length - 1 && index >= 0) {
-        res.setHeader("Content-Type", 'application/json');
-        res.statusCode = 200;
-        res.end(JSON.stringify(pets[index]));
-      } else {
-        res.statusCode = 404;
-        res.setHeader("Content-Type", "text/plain");
-        res.end("Not Found")
-      }
-      // createPost: function(req, res) {
-      //
-      //   fs.writeFile(petsPath, petsJSON, function(writeErr) {
-      //     if (writeErr) {
-      //       throw writeErr;
-      //     }
-      //     console.log(pets);
-      //   });
-    // }
+    if (index <= JSON.stringify(pets).length - 1 && index >= 0) {
+      res.setHeader("Content-Type", 'application/json');
+      res.statusCode = 200;
+      res.end(JSON.stringify(pets[index]));
+    } else {
+      res.statusCode = 404;
+      res.setHeader("Content-Type", "text/plain");
+      res.end("Not Found")
     }
+  },
+  petPostHandler: function(req, res, body) {
+    pets.push(body);
+    var petsString = JSON.stringify(pets);
+    fs.writeFile(petsPath, petsString, function(postErr) {
+      if (postErr) {
+        throw postErr;
+      }
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(body));
+    });
+  }
 }
 
 module.exports = routes;

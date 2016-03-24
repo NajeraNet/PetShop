@@ -1,11 +1,16 @@
-var express = require('express');
+var express = require('express')();
 var app = express();
 var fs = require('fs');
 var path = require('path');
 var petsPath = path.join(__dirname, 'pets.json');
 var pets;
+var bodyParser = require('body-parser');
+var multer = require('multer');
+var upload = multer();
 
 app.set('view engine', 'ejs');
+app.use(bodyParser.json());
+
 fs.readFile(petsPath, 'utf8', function(err, data) {
   if (err) {
     throw err;
@@ -34,6 +39,28 @@ app.get('/pets/1', function(req, res) {
   res.render('index', {
     pets: JSON.stringify(pets[1])
   })
+})
+
+app.post('/pets/', upload.array(), function(req, res, next) {
+
+  var petobj = {
+    age: age,
+    kind: kind,
+    name: name
+  }
+  body.push(petobj);
+  res.json(req.body);
+
+  res.render('index', {
+    pets: JSON.stringify(body)
+  })
+  // var petsJSON = JSON.stringify(pets);
+  // fs.writeFile(petsPath, petsJSON, function(updateErr) {
+  //   if (updateErr) {
+  //     throw updateErr;
+      // res.statusCode(400).send('Bad Request')
+    // }
+  // })
 })
 
 app.get('/*', function(req, res) {

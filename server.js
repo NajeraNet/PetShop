@@ -56,7 +56,7 @@ app.get('/*', function(req, res) {
 app.post('/pets', function(req, res) {
   var pet = req.body;
 
-  if (Number.isNaN(pet.age) || pet.kind !== "" || pet.name !== "") {
+  if (Number.isNaN(pet.age) || !pet.kind || !pet.name) {
     return res.sendStatus(400);
   }
 
@@ -85,7 +85,7 @@ app.put('/pets/:index', function(req, res) {
   var pet = req.body;
   pets[index] = pet;
 
-  if (Number.isNaN(pet.age) || pet.kind === "" || pet.name === "") {
+  if (Number.isNaN(pet.age) || !pet.kind || !pet.name) {
     return res.sendStatus(400);
   }
 

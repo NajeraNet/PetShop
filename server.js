@@ -44,7 +44,7 @@ app.get('/pets/:index', function(req, res) {
   }
 
   res.render('index', {
-    pets: JSON.stringify(pets[index]),
+    pets: pets[index],
   });
 });
 
@@ -113,7 +113,7 @@ app.delete('/pets/:index', function(req, res) {
   var pet = pets.splice(index, 1) [0];
 
   res.render('index', {
-    pets: pets
+    pets: pet
   })
 });
 

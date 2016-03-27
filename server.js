@@ -40,21 +40,18 @@ app.get('/pets/:index', function(req, res, next) {
   const index = Number.parseInt(req.params.index, 10);
 
   if (Number.isNaN(index) || index < 0 || index >= pets.length) {
-    Item.find(function(err, items) {
-      if (err) return next(err);
-      console.log(items);
-    })
-  }
+      return next(notFounderr);
+    }
 
   res.render('index', {
     pets: pets[index],
   });
 });
 
-app.get('/*', function(req, res) {
+app.get('/*', function(req, res, next) {
   res.set('Content-Type', 'text/plain');
-  res.status(404).send('Not found');
-});
+  return next(errorAll)
+})
 
 app.post('/pets', function(req, res) {
   const pet = req.body;
@@ -113,8 +110,8 @@ app.patch('/pets/:index', function(req, res) {
     return res.sendStatus(404);
   }
 
-  let pet = pets[index];
-  for (let prop in req.body) {
+  const pet = pets[index];
+  for (const prop in req.body) {
     pet[prop] = req.body[prop]
   }
 
@@ -152,6 +149,14 @@ app.delete('/pets/:index', function(req, res) {
   });
 });
 
-app.use(function(err, req, res, next) {
+function notFounderr(err, req, res, next) {
+  res.status(404).send("Not Found")
+}
+
+function errorAll(err, req, res, next) {
+  console.log(err.stack);
   return res.send(500, { message: err.message });
-});
+}
+
+app.use(notFounderr);
+app.use(errorAll);

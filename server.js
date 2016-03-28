@@ -9,15 +9,26 @@ let pets;
 
 app.disable('x-powered-by');
 
-
 const morgan = require('morgan');
 app.use(morgan('short'));
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+const basicAuth = require('basic-auth');
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 5000);
+
+app.use((req, res, next) => {
+  const creds = basicAuth(req);
+
+  if (creds && creds.name === 'admin' && creds.pass === 'meowmix') {
+    return next();
+  }
+
+  res.set('WWW-Authenticate', 'Basic realm="Required"');
+  res.sendStatus(401);
+})
 
 fs.readFile(petsPath, 'utf8', function(err, data) {
   if (err) {
@@ -149,14 +160,21 @@ app.delete('/pets/:index', function(req, res) {
   });
 });
 
-function notFounderr(err, req, res, next) {
+app.use(function(req, res) {
   res.status(404).send("Not Found")
-}
+});
 
 function errorAll(err, req, res, next) {
   console.log(err.stack);
+
+  let message;
+
+  if (app.get('env') === 'development') {
+    message = err.message;
+  }
+    else {
+      message = 'Internal Server Error'
+    }
+    res.status(500);
   return res.send(500, { message: err.message });
 }
-
-app.use(notFounderr);
-app.use(errorAll);

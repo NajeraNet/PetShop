@@ -4,8 +4,9 @@
   "description": "This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.",
   "main": "server.js",
   "dependencies": {
+    "ejs": "^2.4.1",
     "express": "^4.13.4",
-    "ejs": "^2.4.1"
+    "morgan": "^1.7.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -20,6 +20,8 @@ const basicAuth = require('basic-auth');
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 5000);
 
+app.use(express.static('public'));
+
 app.use((req, res, next) => {
   const creds = basicAuth(req);
 

@@ -9,6 +9,8 @@ let pets;
 
 app.disable('x-powered-by');
 
+const emoji = require('node-emoji');
+
 const morgan = require('morgan');
 app.use(morgan('short'));
 
@@ -44,6 +46,8 @@ fs.readFile(petsPath, 'utf8', function(err, data) {
   });
 });
 
+console.log(emoji.get('raising_hand'));
+
 app.get('/pets', function(req, res) {
   res.render('index', {
     pets: pets,
@@ -61,11 +65,6 @@ app.get('/pets/:index', function(req, res, next) {
     pets: pets[index],
   });
 });
-
-app.get('/*', function(req, res, next) {
-  res.set('Content-Type', 'text/plain');
-  return next(errorAll)
-})
 
 app.post('/pets', function(req, res) {
   const pet = req.body;
@@ -167,6 +166,12 @@ app.use(function(req, res) {
   res.status(404).send("Not Found")
 });
 
+app.get('/*', function(req, res, next) {
+  res.set('Content-Type', 'text/plain');
+  return next(errorAll)
+})
+
+app.use(errorAll);
 function errorAll(err, req, res, next) {
   console.log(err.stack);
 

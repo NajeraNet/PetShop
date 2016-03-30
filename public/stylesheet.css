@@ -1,3 +1,19 @@
-div {
-  text-align: center;
+.jumbotron {
+  background-image: url(https://images.unsplash.com/photo-1451146136985-c86c1f42bc61?crop=entropy&dpr=1.33&fit=crop&fm=jpg&h=1175&ixjsv=2.1.0&ixlib=rb-0.3.5&q=75&w=2175);
+  background-size: cover;
+  height: 600px;
+  background-repeat: no-repeat;
+}
+
+h2 {
+  font-size: 50px;
+}
+
+h1 {
+  margin: 2%;
+}
+
+.pets {
+  display: inline-block;
+  margin: 5%;
 }

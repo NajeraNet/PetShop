@@ -19,6 +19,16 @@ app.use(bodyParser.json());
 
 const basicAuth = require('basic-auth');
 
+fs.readFile(petsPath, 'utf8', function(err, data) {
+  if (err) {
+    throw err;
+  }
+  pets = JSON.parse(data);
+  app.listen(app.get('port'), function() {
+    console.log('listening on', app.get('port'));
+  });
+});
+
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 5000);
 
@@ -35,18 +45,12 @@ app.use((req, res, next) => {
   res.sendStatus(401);
 })
 
-fs.readFile(petsPath, 'utf8', function(err, data) {
-  if (err) {
-    throw err;
-  }
-  pets = JSON.parse(data);
 
-  app.listen(app.get('port'), function() {
-    console.log('listening on', app.get('port'));
-  });
+
+app.use(function(req, res, next) {
+  console.log('🙆');
+  next();
 });
-
-console.log(emoji.get('raising_hand'));
 
 app.get('/pets', function(req, res) {
   res.render('index', {
@@ -78,13 +82,12 @@ app.post('/pets', function(req, res) {
   const petsJSON = JSON.stringify(pets);
   fs.writeFile(petsPath, petsJSON, function(updateErr) {
     if (updateErr) {
-      throw updateErr;
-      res.statusCode(400).send('Bad Request');
-    } else {
-      res.render('index', {
-        pets: pet,
-      });
+      return next(updateErr);
     }
+
+    res.render('index', {
+      pets: pet,
+    });
   });
 });
 
@@ -106,13 +109,12 @@ app.put('/pets/:index', function(req, res) {
 
   fs.writeFile(petsPath, petsJSON, function(updateErr) {
     if (updateErr) {
-      throw updateErr;
-      res.statusCode(400).send('Bad Request');
-    } else {
+      return next(updateErr);
+    }
+
       res.render('index', {
         pets: pet,
-      });
-    }
+    });
   });
 });
 
@@ -138,13 +140,12 @@ app.patch('/pets/:index', function(req, res) {
 
   fs.writeFile(petsPath, petsJSON, function(updateErr) {
     if (updateErr) {
-      throw updateErr;
-      res.statusCode(400).send('Bad Request');
-    } else {
+      return next(updateErr);
+    }
+
       res.render('index', {
         pets: pet,
-      });
-    }
+    });
   });
 });
 
@@ -157,8 +158,14 @@ app.delete('/pets/:index', function(req, res) {
 
   const pet = pets.splice(index, 1)[0];
 
-  res.render('index', {
-    pets: pet,
+  fs.writeFile(petsPath, petsJSON, function(updateErr) {
+    if (updateErr) {
+      return next(updateErr);
+    }
+
+      res.render('index', {
+        pets: pet,
+    });
   });
 });
 
@@ -166,13 +173,8 @@ app.use(function(req, res) {
   res.status(404).send("Not Found")
 });
 
-app.get('/*', function(req, res, next) {
+app.use('*', function(err, req, res, next) {
   res.set('Content-Type', 'text/plain');
-  return next(errorAll)
-})
-
-app.use(errorAll);
-function errorAll(err, req, res, next) {
   console.log(err.stack);
 
   let message;
@@ -185,4 +187,5 @@ function errorAll(err, req, res, next) {
     }
     res.status(500);
   return res.send(500, { message: err.message });
-}
+  }
+})

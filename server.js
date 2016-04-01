@@ -187,5 +187,4 @@ app.use('*', function(err, req, res, next) {
     }
     res.status(500);
   return res.send(500, { message: err.message });
-  }
 })

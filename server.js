@@ -19,18 +19,12 @@ app.use(bodyParser.json());
 
 const basicAuth = require('basic-auth');
 
-fs.readFile(petsPath, 'utf8', function(err, data) {
-  if (err) {
-    throw err;
-  }
-  pets = JSON.parse(data);
-  app.listen(app.get('port'), function() {
-    console.log('listening on', app.get('port'));
-  });
-});
-
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 5000);
+
+app.listen(app.get('port'), function() {
+  console.log('listening on', app.get('port'));
+});
 
 app.use(express.static('public'));
 
@@ -45,7 +39,12 @@ app.use((req, res, next) => {
   res.sendStatus(401);
 })
 
-
+fs.readFile(petsPath, 'utf8', function(err, data) {
+  if (err) {
+    throw err;
+  }
+  pets = JSON.parse(data);
+});
 
 app.use(function(req, res, next) {
   console.log('🙆');
